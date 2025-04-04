@@ -32,7 +32,7 @@ class ReminderNode(Node):
         self.timezone = pytz.timezone("America/New_York")  # Adjust if needed
         self.nurse_email = 'mediallynurse@gmail.com'
         self.sender_email = "mediallynurse@gmail.com"  # Your email
-        self.sender_password = "muog nibd apcf qjyp"  # Your app password
+        self.sender_password = "password"  # Your app password
         self.now = datetime.datetime.now(self.timezone)
         self.prev_now = None
         self.i = 0
