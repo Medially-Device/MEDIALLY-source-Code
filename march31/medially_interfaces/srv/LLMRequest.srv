@@ -1,0 +1,7 @@
+string role         # The role the LLM should take (e.g., "sentence_fixer", "question_answering")
+string input_text   # The text input for processing
+---
+string output_text     # The LLM-generated response
+
+
+

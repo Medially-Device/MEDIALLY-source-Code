@@ -1,0 +1,4 @@
+# FacialRecognition.srv
+string role
+---
+bool success
