@@ -8,6 +8,8 @@ An LSTM-based model for pill intake detection based on pose estimation.
 
 The system includes modules for video processing, real-time prediction, client-server communication, and model training.
 
+
+
 Features
 
 1. Facial Recognition
@@ -38,6 +40,7 @@ Sigmoid output for binary classification
 
 
 
+
 Installation
 
 Dependencies
@@ -61,11 +64,11 @@ ComputerVision/
 │   └── pill_classifier.keras  # Saved trained model
 └── README.md
 
+
+
 Training the Model
 
-Run Model_Training.py:
-
-python Model_Training.py
+Run Pill_Prediction_DeepLearning.ipynb from jupyter notebooks
 
 Key Steps:
 
@@ -76,6 +79,8 @@ Applies data augmentation (flip, noise).
 Trains an LSTM model on sequence data with class re-weighting.
 
 Saves the trained model to models/pill_classifier.keras.
+
+Generates Confusion Matrix and Loss/Accuracy Plots for training
 
 
 
@@ -97,19 +102,25 @@ Example Pose Landmarking Output:
 
 
 
+
+
 Client-Server Deployment
 
 For embedded edge device operation:
 
 1. Start Host Server:
 
-python Server_Host.py
+python SocketServer-Host.py
 
 2. Start Client on BeagleBone:
 
-python Client_Device.py
+python SocketServer-Client.py 
 
 Server sends START_MAIN or START_FACEID signals based on key input.
+
+
+
+
 
 Performance
 
@@ -133,8 +144,11 @@ Implement user feedback on false classifications.
 
 Integrate pill dispensation logging and cloud syncing.
 
+
+
+
+
 Contributors
 
-[Your Name Here]
-
-University of Waterloo, Capstone Project Team
+Josh Visser
+University of Guelph, Capstone Project
