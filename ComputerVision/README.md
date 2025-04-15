@@ -48,19 +48,17 @@ pip install keras tensorflow opencv-python mediapipe deepface scikit-learn matpl
 
 Directory Structure
 
-smart-pillbox/
+ComputerVision/
 ├── Record_Predict.py          # Main CV pipeline for real-time detection
-├── Model_Training.py          # Training script for LSTM model
-├── Server_Host.py             # Remote host server implementation
-├── Client_Device.py           # BeagleBone/Edge client-side code
+├── Pill_Prediction_DeepLearning.ipynb         # Training script for LSTM model
+├── SocketServer-Host.py             # Remote host server implementation
+├── SocketServer-Client.py           # BeagleBone/Edge client-side code
 ├── images/
 │   ├── landmark_example.png   # Pose estimation & facial recognition illustration
 │   ├── model_architecture.png # Model architecture diagram
 │   └── confusion_matrix.png   # Classification performance visualization
 ├── models/
 │   └── pill_classifier.keras  # Saved trained model
-├── videos/
-│   └── sample_video.mp4       # Sample user video for inference
 └── README.md
 
 Training the Model
