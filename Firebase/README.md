@@ -50,6 +50,10 @@ This project is a **secure, web-based Smart Pillbox and Medication Assistant** t
 - Backend activity is reflected on a console for transparency
 - Patient data is presented in a clear, categorized format
 
+## Frontend Preview
+
+(Firebase/frontend_website.jpg)
+
 ---
 
 ## 🛡️ Compliance and Certifications
