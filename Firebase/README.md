@@ -75,8 +75,8 @@ This project is a **secure, web-based Smart Pillbox and Medication Assistant** t
 Imports are done directly through Firebase CDN URLs, therefore, no dependencies need to be installed to develop the Frontend.
 The following steps outline the process to build a Firestore Database and Frontend Website using JS, HTML, CSS, and Python:
 
-1. Sign in to your Google Account and create a project using the following link: https://console.firebase.google.com/u/0/
-2. Create a Firestore Database and set the following rules to allow only authenticated users to read and write in the database
+1. Sign in to your **Google Account** and create a project using the following link: https://console.firebase.google.com/u/0/
+2. Create a **Firestore Database** and set the following rules to allow only authenticated users to read and write in the database.
 
 ```
 rules_version = '2';
@@ -90,8 +90,8 @@ service cloud.firestore {
   }
 }
 ```
-3. Set up Authentication in Firebase by enabling either Email/Password or Google Sign-In methods. Then enter the identified user
-4. Create a Web App and copy the following information which will be unique to your project:
+3. Set up **Authentication** in Firebase by enabling either **Email/Password** or **Google Sign-In methods**. Then enter the identified user.
+4. Create a **Web App** and copy the following information which will be unique to your project:
 
 ```js
 const firebaseConfig = {
@@ -104,13 +104,14 @@ const firebaseConfig = {
   measurementId: " "
 };
 ```
-This information will be needed in app.js and test.html
+This information will be needed in **app.js** and **test.html**
 
-5. Download index.html, app.js, dashboard.html, test.html, and contact.html
-6. Using Visual Studio Code, open index.html with Live Server
+5. Download **index.html**, **app.js**, **dashboard.html**, **test.html**, **contact.html**, and **style.css**
+6. Using **Visual Studio Code**, open and run **index.html** with **Live Server**
+
 ### Dependencies
 
-For applications that utilize Python for accessing, retrieving, or updating information in the Firebase Database, the following depencies should be installed:
+For applications that utilize **Python** for **accessing**, **retrieving**, or **updating** information in the **Firestore Database**, the following depencies should be installed:
 
 ```bash
 pip install firebase-admin pytz
