@@ -61,9 +61,13 @@ A modular AI-powered system designed to reduce medication errors and support hea
 - `audio/`: gTTS integration and emergency alert triggers.
 
 ### `/Firebase`
-- `firebase_config.js`: Web-based Firebase setup.
-- `index.html`: Web interface for managing patients and medications.
-- `rules/`: Firebase Firestore security rules and access policies.
+- `index.html`: User Sign-In page using Google Services
+- `app.js`: Initialization of Firebase and Authentication of user.
+- `dashboard.html`: "Welcome Page" for authenticated users.
+- `test.html`: Web interface for managing patients and medications.
+- `contact.html`: Contact information page for support.
+- `style.css`: Stlying to improve readability and accessibility of services on web interface.
+- `db.py`: Example Python code for accessing and updating information in the Firestore Database
 
 ### `/Mechanical`
 - `cad_models/`: SolidWorks and STL files.
