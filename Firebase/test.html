@@ -1,0 +1,1689 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>MediAlly - Database</title>
+  <link rel="stylesheet" href="style.css">
+  <script type="module" src="app.js"></script>
+</head>
+<body>
+  <nav class="navbar">
+    <div class="logo">
+      <a href="dashboard.html">
+        <img src="logo.png" alt="MediAlly Logo">
+      </a>
+    </div>
+    <ul class="nav-links">
+      <li><a href="dashboard.html">Introduction</a></li>
+      <li><a href="test.html" class="active">Database</a></li>
+      <li><a href="contact.html">Contact</a></li>
+      <li><button id="logout-button">Logout</button></li>
+    </ul>
+  </nav>
+
+  <h1>MediAlly Database</h1>
+  <p>Below is your database interface with patient data, medication info, etc.</p>
+
+  <script>
+    function openTab(evt, tabName) {
+      console.log("Opening tab:", tabName);
+      var i, tabcontent, tablinks;
+      tabcontent = document.getElementsByClassName("tabcontent");
+      for (i = 0; i < tabcontent.length; i++) {
+        tabcontent[i].style.display = "none";
+      }
+      tablinks = document.getElementsByClassName("tablinks");
+      for (i = 0; i < tablinks.length; i++) {
+        tablinks[i].classList.remove("active");
+      }
+      document.getElementById(tabName).style.display = "block";
+      evt.currentTarget.classList.add("active");
+    }
+
+    // Open the Patients tab by default
+    document.addEventListener("DOMContentLoaded", function() {
+      document.getElementById("Patients").style.display = "block";
+      var firstTab = document.querySelector(".tablinks");
+      if (firstTab) {
+        firstTab.classList.add("active");
+      }
+    });
+  </script>
+
+  <h2>Select a patient and view their details:</h2>
+
+  <div class="tab">
+    <button class="tablinks" id="patients-tab" onclick="openTab(event, 'Patients')">Patients</button>
+    <button class="tablinks" id="basicinfo-tab" onclick="openTab(event, 'BasicInfo')" disabled>Basic Info</button>
+    <button class="tablinks" id="medicaldetails-tab" onclick="openTab(event, 'MedicalDetails')" disabled>Medical Details</button>
+    <button class="tablinks" id="appointments-tab" onclick="openTab(event, 'Appointments')" disabled>Appointments</button>
+    <button class="tablinks" id="insurance-tab" onclick="openTab(event, 'Insurance')" disabled>Insurance & Directives</button>
+    <button class="tablinks" id="qa-tab" onclick="openTab(event, 'QA')" disabled>QA</button>
+  </div>
+  
+  <!-- Patients Tab Content -->
+  <div id="Patients" class="tabcontent">
+    <h3>Patients</h3>
+    <div id="patient-list"></div>
+  </div>
+
+  <!-- Basic Info Tab Content -->
+  <div id="BasicInfo" class="tabcontent">
+    <h3>Basic Information</h3>
+    <p><strong>Name:</strong> <span id="name-display">N/A</span></p>
+    <p><strong>DOB:</strong> <span id="dob-display">N/A</span></p>
+    <p><strong>Gender:</strong> <span id="gender-display">N/A</span></p>
+    <p><strong>Marital Status:</strong> <span id="marital_status_display">N/A</span></p>
+    <p><strong>Blood Type:</strong> <span id="blood_type_display">N/A</span></p>
+    <p><strong>Height:</strong> <span id="height-display">N/A</span></p>
+
+    <h4>Emergency Contact</h4>
+    <p><strong>Name:</strong> <span id="emergency_name">N/A</span></p>
+    <p><strong>Phone:</strong> <span id="emergency_phone">N/A</span></p>
+    <p><strong>Email:</strong> <span id="emergency_email">N/A</span></p>
+
+    <h4>Primary Care Physician</h4>
+    <p><strong>Name:</strong> <span id="pcp-name">N/A</span></p>
+    <p><strong>Email:</strong> <span id="pcp-email">N/A</span></p>
+    <p><strong>Phone:</strong> <span id="pcp-phone">N/A</span></p>
+
+  </div>
+  
+  <!-- Medical Details Tab Content -->
+  <div id="MedicalDetails" class="tabcontent">
+    <h3>Medical Conditions & Medications</h3>
+    <p id="medical_conditions">N/A</p>
+    <h4>Medication Schedule</h4>
+    <p id="medication_schedule">N/A</p>
+    <h4>Allergies</h4>
+    <p id="allergies">N/A</p>
+    <h4>Dietary Restrictions</h4>
+    <p id="dietary-restrictions">N/A</p>
+    <h4>Family Medical History</h4>
+    <p id="family_medical_history">N/A</p>
+    <h4>Vaccination History</h4>
+    <p id="vaccination_history">N/A</p>
+  </div>
+  
+  <!-- Appointments Tab Content -->
+  <div id="Appointments" class="tabcontent">
+    <h3>Appointments & Notes</h3>
+    <p id="appointment_notes">N/A</p>
+  </div>
+  
+  <!-- Insurance Tab Content -->
+  <div id="Insurance" class="tabcontent">
+    <h3>Insurance & Directives</h3>
+    <h4>Insurance</h4>
+    <p><strong>Provider:</strong> <span id="insurance_provider">N/A</span></p>
+    <p><strong>Policy Number:</strong> <span id="policy_number">N/A</span></p>
+    <p><strong>Group Number:</strong> <span id="group_number">N/A</span></p>
+    <h4>Advance Directives</h4>
+    <p><strong>DNR:</strong> <span id="dnr">N/A</span></p>
+    <p><strong>Organ Donor:</strong> <span id="organ_donor">N/A</span></p>
+    <p><strong>Living Will:</strong> <span id="living_will">N/A</span></p>
+  </div>
+
+  <!-- QA Tab Content -->
+  <div id="QA" class="tabcontent">
+    <h3>Questions and Answers</h3>
+    <label for="qa-filter">Filter by date:</label>
+    <select id="qa-filter">
+      <option value="all">All Dates</option>
+    </select>
+    <div id="qa-list"></div>
+  </div>
+
+  <!-- Add/Update Patient Modal -->
+  <div id="add-update-modal" class="hidden">
+    <div class="modal-content">
+      <span id="close-add-update-modal" class="close-button">&times;</span>
+      <h2>Add/Update Patient Data</h2>
+
+      <!-- Step 1: Mode Selection -->
+      <div id="mode-selection">
+        <button id="mode-add">Add New Patient</button>
+        <button id="mode-update">Update Existing Patient</button>
+      </div>
+
+      <!-- If user chooses "Update", show this dropdown of existing patients -->
+      <div id="update-section" style="display: none; margin-top: 10px;">
+        <label for="patient-select">Select a Patient to Update:</label>
+        <select id="patient-select">
+          <option value="">-- Choose a Patient --</option>
+        </select>
+      </div>
+
+      <hr>
+
+      <!-- The same form is used for both add & update -->
+      <form id="add-update-form" style="display: none;">
+        <label for="nameInput">Name:</label>
+        <input type="text" id="nameInput" name="nameInput" required>
+
+        <label for="dobInput">DOB:</label>
+        <input type="text" id="dobInput" name="dobInput" placeholder="DD/MM/YYYY" required>
+
+        <label for="genderInput">Gender:</label>
+        <input type="text" id="genderInput" name="genderInput" required>
+
+        <label for="heightInput">Height</label>
+        <input type="text" id="heightInput" placeholder="e.g. 5'8&quot;">
+
+        <label for="maritalInput">Marital Status:</label>
+        <input type="text" id="maritalInput" name="maritalInput">
+
+        <label for="bloodInput">Blood Type:</label>
+        <input type="text" id="bloodInput" name="bloodInput">
+
+        <label for="emergencyContactName">Emergency Contact Name:</label>
+        <input type="text" id="emergencyContactName" name="emergencyContactName" required>
+
+        <label for="emergencyContactPhone">Emergency Contact Phone:</label>
+        <input type="text" id="emergencyContactPhone" name="emergencyContactPhone" required>
+
+        <label for="emergencyContactEmail">Emergency Contact Email:</label>
+        <input type="text" id="emergencyContactEmail" name="emergencyContactEmail" required>
+
+        <hr>
+        <h3>Allergies (comma-separated):</h3>
+        <input type="text" id="allergiesInput" placeholder="Penicillin, Nuts">
+
+        <hr>
+        <h3>Dietary Restrictions (comma-separated):</h3>
+        <input type="text" id="dietaryRestrictions" placeholder="e.g. Gluten-free, Vegan, Low Sodium">
+
+        <hr>
+        <h3>Family Medical History</h3>
+        <label>Father:</label>
+        <input type="text" id="fatherInput" placeholder="Diabetes, Hypertension">
+        <label>Mother:</label>
+        <input type="text" id="motherInput" placeholder="Arthritis">
+
+        <hr>
+        <h3>Appointment Notes (comma-separated date:note):</h3>
+        <input type="text" id="appointmentInput" placeholder="2025-03-20:Check-up, 2025-04-10:Follow-up">
+
+        <hr>
+        <h3>Vaccination History (comma-separated vaccine:date):</h3>
+        <input type="text" id="vaccinationInput" placeholder="Tetanus:2020-01-01, Flu:2023-02-15">
+
+        <hr>
+        <h3>Insurance</h3>
+        <label>Provider:</label>
+        <input type="text" id="insuranceProvider">
+        <label>Policy #:</label>
+        <input type="text" id="policyNumber">
+        <label>Group #:</label>
+        <input type="text" id="groupNumber">
+
+        <hr>
+        <h3>Primary Care Physician</h3>
+        <label for="pcpName">Name:</label>
+        <input type="text" id="pcpName" name="pcpName">
+
+        <label for="pcpEmail">Email:</label>
+        <input type="text" id="pcpEmail" name="pcpEmail">
+
+        <label for="pcpPhone">Phone:</label>
+        <input type="text" id="pcpPhone" name="pcpPhone">
+
+        <hr>
+        <h3>Advance Directives</h3>
+        <label>DNR:</label>
+        <input type="text" id="dnrInput">
+        <label>Organ Donor:</label>
+        <input type="text" id="organDonorInput">
+        <label>Living Will On File:</label>
+        <input type="text" id="livingWillInput">
+
+        <hr>
+        <h3>Conditions and Medications</h3>
+        <div id="conditions-container">
+          <div class="condition-group">
+            <label>Condition:</label>
+            <input type="text" name="conditions[]" required>
+            <label>Medication(s) (comma-separated):</label>
+            <input type="text" name="medications[]" required>
+            <button type="button" class="add-condition">Add Another Condition</button>
+          </div>
+        </div>
+
+        <hr>
+        <h3>Medication Schedule</h3>
+        <div id="schedule-container">
+          <div class="schedule-group">
+            <label>Medication:</label>
+            <input type="text" name="schedule_medication[]" required>
+
+            <label>Dosage:</label>
+            <input type="text" name="schedule_dosage[]" required>
+
+            <label>Time:</label>
+            <input type="text" name="schedule_time[]" placeholder="e.g. 8:00 AM" required>
+
+            <label>Taken Status:</label>
+            <select name="schedule_taken[]">
+              <option value="false">Not Taken</option>
+              <option value="true">Taken</option>
+            </select>
+
+            <label>Compartment ID:</label>
+            <input type="number" name="schedule_compartment[]" placeholder="e.g. 1">
+
+            <button type="button" class="add-schedule">Add Another Schedule</button>
+
+          </div>
+        </div>
+        
+        <button type="submit">Submit</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Add/Update Medication Modal -->
+  <div id="add-update-medication-modal" class="hidden">
+    <div class="modal-content">
+      <span id="close-add-update-medication-modal" class="close-button">&times;</span>
+      <h2>Add/Update Medication Data</h2>
+
+      <!-- Step 1: Mode Selection -->
+      <div id="med-mode-selection">
+        <button id="med-mode-add">Add New Medication</button>
+        <button id="med-mode-update">Update Existing Medication</button>
+      </div>
+
+      <!-- If user chooses "Update", show this dropdown of existing meds -->
+      <div id="med-update-section" style="display: none; margin-top: 10px;">
+        <label for="medication-select">Select a Medication to Update:</label>
+        <select id="medication-select">
+          <option value="">-- Choose a Medication --</option>
+        </select>
+      </div>
+
+      <hr>
+
+      <!-- The same form is used for both add & update -->
+      <form id="add-update-medication-form" style="display: none; text-align: left;">
+        <!-- 1) Basic Fields -->
+        <label for="medicationName">Medication Name:</label>
+        <input type="text" id="medicationName" required>
+
+        <label for="active_ingredient">Active Ingredient:</label>
+        <input type="text" id="active_ingredient">
+
+        <label for="brand_name">Brand Names (comma-separated if multiple):</label>
+        <input type="text" id="brand_name">
+
+        <label for="medical-conditions">Medical Conditions (simple string):</label>
+        <input type="text" id="medical-conditions">
+
+        <label for="common_side_effects">Common Side Effects:</label>
+        <input type="text" id="common_side_effects">
+
+        <label for="severe_side_effects">Severe Side Effects:</label>
+        <input type="text" id="severe_side_effects">
+
+        <label for="onset_of_action">Onset of Action:</label>
+        <input type="text" id="onset_of_action">
+
+        <label for="drug_interactions">Drug Interactions:</label>
+        <input type="text" id="drug_interactions">
+
+        <label for="other_interactions">Other Interactions:</label>
+        <input type="text" id="other_interactions">
+
+        <label for="storage">Storage:</label>
+        <input type="text" id="storage">
+
+        <label for="compartment_id">Compartment ID:</label>
+        <input type="number" id="compartment_id">
+
+        <label for="inventory">Inventory:</label>
+        <input type="number" id="inventory">
+
+        <label for="expiration_date">Expiration Date:</label>
+        <input type="text" id="expiration_date">
+
+        <label for="lot_number">Lot Number:</label>
+        <input type="text" id="lot_number">
+
+        <label for="inactive_ingredients">Inactive Ingredients (comma-separated):</label>
+        <input type="text" id="inactive_ingredients">
+
+        <!-- 2) Manufacturer Information -->
+        <h3>Manufacturer Information</h3>
+        <label for="manufacturer_name">Name:</label>
+        <input type="text" id="manufacturer_name">
+
+        <label for="manufacturer_phone">Phone:</label>
+        <input type="text" id="manufacturer_phone">
+
+        <label for="manufacturer_international_phone">International Phone:</label>
+        <input type="text" id="manufacturer_international_phone">
+
+        <!-- 3) Warnings (array) -->
+        <label for="warnings">Warnings (comma-separated):</label>
+        <input type="text" id="warnings">
+
+        <!-- 4) Dosage Instructions (object) -->
+        <h3>Dosage Instructions</h3>
+        <div id="dosage-container">
+          <div class="dosage-group">
+            <label>Condition:</label>
+            <input type="text" name="dosage_conditions[]" required>
+            <label>Dosage:</label>
+            <input type="text" name="dosage_instructions[]" required>
+            <button type="button" class="add-dosage">Add Another Dosage</button>
+          </div>
+        </div>
+
+        <!-- 5) Usage Instructions (object: activity, food, time, water) -->
+        <h3>Usage Instructions</h3>
+        <div id="usage-container">
+          <!-- If you want a single dynamic approach, do it like dosage. 
+              But if you prefer to store "activity, food, time, water" specifically, 
+              you can do static fields. Example below uses static fields: -->
+          <label for="usage_activity">Activity:</label>
+          <input type="text" id="usage_activity">
+
+          <label for="usage_food">Food:</label>
+          <input type="text" id="usage_food">
+
+          <label for="usage_time">Time:</label>
+          <input type="text" id="usage_time">
+
+          <label for="usage_water">Water:</label>
+          <input type="text" id="usage_water">
+        </div>
+
+        <button type="submit">Submit</button>
+      </form>
+    </div>
+  </div>
+
+
+  <div class="center-buttons">
+    <!-- Single button that triggers Add/Update modal -->
+    <button id="add-update-button">Add/Update Patient Data</button>
+    <button id="add-update-medication-button">Add/Update Medication Data</button>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.18.0/firebase-app.js';
+    import {
+      getFirestore, collection, addDoc, getDocs, onSnapshot,
+      query, where, updateDoc, doc, getDoc, setDoc
+    } from 'https://www.gstatic.com/firebasejs/9.18.0/firebase-firestore.js';
+    import { getAuth, signOut, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/9.18.0/firebase-auth.js';
+
+    const firebaseConfig = {
+      apiKey: "",
+      authDomain: "",
+      projectId: "",
+      storageBucket: "",
+      messagingSenderId: "",
+      appId: "",
+      measurementId: ""
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const auth = getAuth(app);
+
+    // For Add/Update logic
+    let selectedPatientId = null; // if null => add mode; if not null => update mode
+
+    // ===================== PATIENT FUNCTIONS =====================
+
+    async function fetchPatientData() {
+      const querySnapshot = await getDocs(collection(db, "Patient Information"));
+      const patientListDiv = document.getElementById("patient-list");
+      patientListDiv.innerHTML = ""; // Clear existing list
+      querySnapshot.forEach((docSnap) => {
+        const data = docSnap.data();
+        const btn = document.createElement("button");
+        btn.textContent = data.name || "Unnamed Patient";
+        btn.addEventListener("click", () => {
+          document.getElementById("basicinfo-tab").disabled = false;
+          document.getElementById("medicaldetails-tab").disabled = false;
+          document.getElementById("appointments-tab").disabled = false;
+          document.getElementById("insurance-tab").disabled = false;
+          document.getElementById("qa-tab").disabled = false;
+          populateTabs(data);
+        });
+        patientListDiv.appendChild(btn);
+      });
+    }
+
+    function populateTabs(data) {
+      // Basic Info
+      document.getElementById("name-display").textContent = data.name || "N/A";
+      document.getElementById("dob-display").textContent = data.dob || "N/A";
+      document.getElementById("gender-display").textContent = data.gender || "N/A";
+      document.getElementById("marital_status_display").textContent = data.marital_status || "N/A";
+      document.getElementById("blood_type_display").textContent = data.blood_type || "N/A";
+      document.getElementById("emergency_name").textContent = data.emergency_contact?.name || "N/A";
+      document.getElementById("emergency_phone").textContent = data.emergency_contact?.phone || "N/A";
+      document.getElementById("emergency_email").textContent = data.emergency_contact?.email || "N/A";
+
+      // Medical Details
+      document.getElementById("medical_conditions").textContent =
+        Object.keys(data.medical_conditions || {}).join(", ") || "N/A";
+
+      // Medication schedule
+      document.getElementById("medication_schedule").innerHTML = Array.isArray(data.medication_schedule)
+      ? data.medication_schedule.map(schedule =>
+          `<a href="#" class="medication-link" data-medication="${schedule.medication}">${schedule.medication}</a> (${schedule.condition}) - ${schedule.dosage} at ${schedule.time}, Compartment: ${schedule.compartment_id || "N/A"}, taken: ${schedule.taken}`
+        ).join("<br>")
+      : "N/A";
+
+
+
+      document.getElementById("allergies").textContent = (data.allergies || []).join(", ") || "N/A";
+      document.getElementById("family_medical_history").textContent =
+        `Father: ${data.family_medical_history?.Father?.join(", ") || "N/A"} | Mother: ${data.family_medical_history?.Mother?.join(", ") || "N/A"}`;
+      document.getElementById("appointment_notes").innerHTML = Array.isArray(data.appointment_notes)
+        ? data.appointment_notes.map(note => `<strong>Date:</strong> ${note.date} <br><strong>Notes:</strong> ${note.notes}`).join("<br>")
+        : "N/A";
+      document.getElementById("vaccination_history").innerHTML = Object.entries(data.vaccination_history || {}).map(
+        ([vaccine, date]) => `${vaccine}: ${date}`
+      ).join("<br>") || "N/A";
+      document.getElementById("insurance_provider").textContent = data.insurance?.provider || "N/A";
+      document.getElementById("policy_number").textContent = data.insurance?.policy_number || "N/A";
+      document.getElementById("group_number").textContent = data.insurance?.group_number || "N/A";
+      document.getElementById("dnr").textContent = data.advance_directives?.DNR || "N/A";
+      document.getElementById("organ_donor").textContent = data.advance_directives?.organ_donor || "N/A";
+      document.getElementById("living_will").textContent = data.advance_directives?.living_will_on_file || "N/A";
+      document.getElementById("height-display").textContent = data.height || "N/A";
+      document.getElementById("pcp-name").textContent = data.primary_care_physician?.name || "N/A";
+      document.getElementById("pcp-email").textContent = data.primary_care_physician?.email || "N/A";
+      document.getElementById("pcp-phone").textContent = data.primary_care_physician?.phone || "N/A";
+
+      document.getElementById("dietary-restrictions").textContent =
+        (data.dietary_restrictions || []).join(", ") || "N/A";
+
+      fetchQAEntriesForPatient(data.name);
+    }
+
+    document.getElementById("schedule-container").addEventListener("click", function(event) {
+      if (event.target && event.target.classList.contains("add-schedule")) {
+        // Create a new .schedule-group
+        const scheduleGroup = document.createElement("div");
+        scheduleGroup.classList.add("schedule-group");
+        scheduleGroup.innerHTML = `
+        <div>
+          <label>Medication:</label>
+          <input type="text" name="schedule_medication[]" required>
+        </div>
+
+        <div>
+          <label>Condition:</label>
+          <input type="text" name="schedule_condition[]" placeholder="e.g. Angina" required>
+        </div>
+
+        <div>
+          <label>Dosage:</label>
+          <input type="text" name="schedule_dosage[]" required>
+        </div>
+
+        <div>
+          <label>Time:</label>
+          <input type="text" name="schedule_time[]" placeholder="e.g. 8:00 AM" required>
+        </div>
+
+        <div>
+          <label>Taken Status:</label>
+          <select name="schedule_taken[]">
+            <option value="false" ${entry.taken === false ? "selected" : ""}>Not Taken</option>
+            <option value="true" ${entry.taken === true ? "selected" : ""}>Taken</option>
+          </select>
+        </div>
+
+        <div>
+          <label>Compartment ID:</label>
+          <input type="number" name="schedule_compartment[]" min="0" placeholder="e.g. 1">
+        </div>
+
+        <div>
+          <button type="button" class="remove-schedule">Remove Schedule</button>
+        </div>
+      `;
+
+        document.getElementById("schedule-container").appendChild(scheduleGroup);
+      }
+      if (event.target && event.target.classList.contains("remove-schedule")) {
+        event.target.closest(".schedule-group").remove();
+      }
+    });
+
+    // ===================== ADD/UPDATE MODAL LOGIC =====================
+    // Single modal for add or update
+    const addUpdateModal = document.getElementById("add-update-modal");
+    const closeAddUpdateBtn = document.getElementById("close-add-update-modal");
+    const modeSelectionDiv = document.getElementById("mode-selection");
+    const updateSection = document.getElementById("update-section");
+    const addUpdateForm = document.getElementById("add-update-form");
+    const patientSelect = document.getElementById("patient-select");
+
+    // The main button that triggers the add/update modal
+    document.getElementById("add-update-button").addEventListener("click", () => {
+      addUpdateModal.classList.add("visible");
+      // Hide stuff by default
+      updateSection.style.display = "none";
+      addUpdateForm.style.display = "none";
+      selectedPatientId = null;
+    });
+
+    // Close the modal
+    closeAddUpdateBtn.addEventListener("click", () => {
+      addUpdateModal.classList.remove("visible");
+    });
+
+    // If user clicks "Add New Patient"
+    document.getElementById("mode-add").addEventListener("click", () => {
+      selectedPatientId = null;
+      updateSection.style.display = "none";
+      addUpdateForm.style.display = "block";
+      clearPatientForm();
+    });
+
+    // If user clicks "Update Existing Patient"
+    document.getElementById("mode-update").addEventListener("click", async () => {
+      selectedPatientId = null;
+      updateSection.style.display = "block";
+      addUpdateForm.style.display = "block";
+      clearPatientForm();
+      await populatePatientSelect();
+    });
+
+    // Populate the <select> with existing patients
+    async function populatePatientSelect() {
+      patientSelect.innerHTML = `<option value="">-- Choose a Patient --</option>`;
+      const querySnapshot = await getDocs(collection(db, "Patient Information"));
+      querySnapshot.forEach(docSnap => {
+        const data = docSnap.data();
+        const option = document.createElement("option");
+        option.value = docSnap.id;
+        option.textContent = data.name || "Unnamed";
+        patientSelect.appendChild(option);
+      });
+    }
+
+    // If user picks a patient from dropdown, load their data into the form
+    patientSelect.addEventListener("change", async (e) => {
+      const docId = e.target.value;
+      if (!docId) {
+        clearPatientForm();
+        selectedPatientId = null;
+        return;
+      }
+      selectedPatientId = docId;
+      const docRef = doc(db, "Patient Information", docId);
+      const docSnap = await getDoc(docRef);
+      if (docSnap.exists()) {
+        loadPatientForm(docSnap.data());
+      } else {
+        console.warn("No doc found for ID:", docId);
+        clearPatientForm();
+        selectedPatientId = null;
+      }
+    });
+
+    // Fill the form with doc data
+    function loadPatientForm(data) {
+      document.getElementById("nameInput").value = data.name || "";
+      document.getElementById("dobInput").value = data.dob || "";
+      document.getElementById("genderInput").value = data.gender || "";
+      document.getElementById("maritalInput").value = data.marital_status || "";
+      document.getElementById("bloodInput").value = data.blood_type || "";
+      document.getElementById("emergencyContactName").value = data.emergency_contact?.name || "";
+      document.getElementById("emergencyContactPhone").value = data.emergency_contact?.phone || "";
+      document.getElementById("emergencyContactEmail").value = data.emergency_contact?.email || "";
+      document.getElementById("dietaryRestrictions").value = (data.dietary_restrictions || []).join(", ");
+      document.getElementById("heightInput").value = data.height || "";
+      document.getElementById("pcpName").value = data.primary_care_physician?.name || "";
+      document.getElementById("pcpEmail").value = data.primary_care_physician?.email || "";
+      document.getElementById("pcpPhone").value = data.primary_care_physician?.phone || "";
+
+
+      // allergies array => join with commas
+      document.getElementById("allergiesInput").value = (data.allergies || []).join(", ");
+
+      // father, mother
+      document.getElementById("fatherInput").value = (data.family_medical_history?.Father || []).join(", ");
+      document.getElementById("motherInput").value = (data.family_medical_history?.Mother || []).join(", ");
+
+      // appointment_notes => array of {date, notes}
+      if (Array.isArray(data.appointment_notes)) {
+        // build a comma-separated "date:note" string
+        const arr = data.appointment_notes.map(item => `${item.date}:${item.notes}`);
+        document.getElementById("appointmentInput").value = arr.join(", ");
+      }
+
+      // vaccination_history => object of {vaccine: date}
+      if (data.vaccination_history) {
+        const pairs = Object.entries(data.vaccination_history).map(([v, d]) => `${v}:${d}`);
+        document.getElementById("vaccinationInput").value = pairs.join(", ");
+      }
+
+      // insurance
+      document.getElementById("insuranceProvider").value = data.insurance?.provider || "";
+      document.getElementById("policyNumber").value = data.insurance?.policy_number || "";
+      document.getElementById("groupNumber").value = data.insurance?.group_number || "";
+
+      // advance directives
+      document.getElementById("dnrInput").value = data.advance_directives?.DNR || "";
+      document.getElementById("organDonorInput").value = data.advance_directives?.organ_donor || "";
+      document.getElementById("livingWillInput").value = data.advance_directives?.living_will_on_file || "";
+
+      // conditions/medications => object
+      // For simplicity, just clear the container & re-add them
+      const container = document.getElementById("conditions-container");
+      container.innerHTML = "";
+      const medConds = data.medical_conditions || {};
+      // Each key is a condition, value is {medications:[]}
+      for (let cond of Object.keys(medConds)) {
+        const meds = medConds[cond].medications || [];
+        const cg = document.createElement("div");
+        cg.classList.add("condition-group");
+        cg.innerHTML = `
+          <label>Condition:</label>
+          <input type="text" name="conditions[]" value="${cond}" required>
+          <label>Medication(s):</label>
+          <input type="text" name="medications[]" value="${meds.join(", ")}" required>
+          <button type="button" class="remove-condition">Remove Condition</button>
+        `;
+        container.appendChild(cg);
+      }
+      // Add an "Add Another Condition" button at the end
+      const addBtn = document.createElement("button");
+      addBtn.type = "button";
+      addBtn.classList.add("add-condition");
+      addBtn.textContent = "Add Another Condition";
+      container.appendChild(addBtn);
+
+      // If we have medication_schedule, load it
+      const scheduleContainer = document.getElementById("schedule-container");
+      // Clear any existing fields
+      scheduleContainer.innerHTML = "";
+
+      // data.medication_schedule is presumably an array
+      const medSchedule = data.medication_schedule || [];
+      medSchedule.forEach((entry, index) => {
+        const scheduleGroup = document.createElement("div");
+        scheduleGroup.classList.add("schedule-group");
+        scheduleGroup.innerHTML = `
+        <div>
+          <label>Medication:</label>
+          <input type="text" name="schedule_medication[]" value="${entry.medication || ""}" required>
+        </div>
+
+        <div>
+          <label>Condition:</label>
+          <input type="text" name="schedule_condition[]" value="${entry.condition || ""}" required>
+        <div>
+          <label>Dosage:</label>
+          <input type="text" name="schedule_dosage[]" value="${entry.dosage || ""}" required>
+        </div>
+        <div>
+          <label>Time:</label>
+          <input type="text" name="schedule_time[]" value="${entry.time || ""}" placeholder="e.g. 8:00 AM" required>
+        </div>
+        <div>
+          <label>Taken Status:</label>
+          <select name="schedule_taken[]">
+            <option value="false" ${entry.taken === false ? "selected" : ""}>Not Taken</option>
+            <option value="true" ${entry.taken === true ? "selected" : ""}>Taken</option>
+          </select>
+        </div>
+        <div>
+          <label>Compartment ID:</label>
+          <input type="number" name="schedule_compartment[]" value="${entry.compartment_id || ""}" min="0" placeholder="e.g. 1">
+        </div>
+
+        <div>
+          <button type="button" class="remove-schedule">Remove Schedule</button>
+        </div>
+        `;
+        scheduleContainer.appendChild(scheduleGroup);
+      });
+
+      // Finally add the "Add Another Schedule" button at the bottom
+      addBtn.type = "button";
+      addBtn.classList.add("add-schedule");
+      addBtn.textContent = "Add Another Schedule";
+      scheduleContainer.appendChild(addBtn);
+
+    }
+
+    // Clear the form fields
+    function clearPatientForm() {
+      document.getElementById("nameInput").value = "";
+      document.getElementById("dobInput").value = "";
+      document.getElementById("genderInput").value = "";
+      document.getElementById("maritalInput").value = "";
+      document.getElementById("bloodInput").value = "";
+      document.getElementById("emergencyContactName").value = "";
+      document.getElementById("emergencyContactPhone").value = "";
+      document.getElementById("emergencyContactEmail").value = "";
+      document.getElementById("allergiesInput").value = "";
+      document.getElementById("fatherInput").value = "";
+      document.getElementById("motherInput").value = "";
+      document.getElementById("appointmentInput").value = "";
+      document.getElementById("vaccinationInput").value = "";
+      document.getElementById("insuranceProvider").value = "";
+      document.getElementById("policyNumber").value = "";
+      document.getElementById("groupNumber").value = "";
+      document.getElementById("dnrInput").value = "";
+      document.getElementById("organDonorInput").value = "";
+      document.getElementById("livingWillInput").value = "";
+      document.getElementById("dietaryRestrictions").value = "";
+      document.getElementById("heightInput").value = "";
+
+      document.getElementById("pcpName").value = "";
+      document.getElementById("pcpEmail").value = "";
+      document.getElementById("pcpPhone").value = "";
+
+
+      // Reset conditions container
+      const container = document.getElementById("conditions-container");
+      container.innerHTML = `
+        <div class="condition-group">
+          <label>Condition:</label>
+          <input type="text" name="conditions[]" required>
+          <label>Medication(s):</label>
+          <input type="text" name="medications[]" required>
+          <button type="button" class="add-condition">Add Another Condition</button>
+        </div>
+      `;
+
+      // Reset schedule container too (if not already present)
+      const scheduleContainer = document.getElementById("schedule-container");
+      scheduleContainer.innerHTML = `
+        <div class="schedule-group">
+          <div>
+            <label>Condition:</label>
+            <input type="text" name="schedule_condition[]" required>
+          </div>
+          <div>
+            <label>Medication:</label>
+            <input type="text" name="schedule_medication[]" required>
+          </div>
+          <div>
+            <label>Dosage:</label>
+            <input type="text" name="schedule_dosage[]" required>
+          </div>
+          <div>
+            <label>Time:</label>
+            <input type="text" name="schedule_time[]" placeholder="e.g. 8:00 AM" required>
+          </div>
+          <div>
+            <label>Taken Status:</label>
+            <select name="schedule_taken[]">
+              <option value="false">Not Taken</option>
+              <option value="true">Taken</option>
+            </select>
+          </div>
+          <div>
+            <label>Compartment ID:</label>
+            <input type="number" name="schedule_compartment[]" min="0" placeholder="e.g. 1">
+          </div>
+          <div>
+            <button type="button" class="add-schedule">Add Another Schedule</button>
+          </div>
+        </div>
+      `;
+
+    }
+
+    // Handle Add/Update form submission
+    addUpdateForm.addEventListener("submit", async function(e) {
+      e.preventDefault();
+
+      // Gather fields
+      const Name = document.getElementById("nameInput").value;
+      const DOB = document.getElementById("dobInput").value;
+      const gender = document.getElementById("genderInput").value;
+      const maritalStatus = document.getElementById("maritalInput").value;
+      const bloodType = document.getElementById("bloodInput").value;
+
+      const ecName = document.getElementById("emergencyContactName").value;
+      const ecPhone = document.getElementById("emergencyContactPhone").value;
+      const ecEmail = document.getElementById("emergencyContactEmail").value;
+
+      const allergiesRaw = document.getElementById("allergiesInput").value;
+      const allergies = allergiesRaw ? allergiesRaw.split(",").map(a => a.trim()).filter(a => a) : [];
+
+      const fatherRaw = document.getElementById("fatherInput").value;
+      const fatherArr = fatherRaw ? fatherRaw.split(",").map(x => x.trim()) : [];
+      const motherRaw = document.getElementById("motherInput").value;
+      const motherArr = motherRaw ? motherRaw.split(",").map(x => x.trim()) : [];
+
+      const appointmentRaw = document.getElementById("appointmentInput").value;
+      const dietaryRaw = document.getElementById("dietaryRestrictions").value.trim();
+      const dietary_restrictions = dietaryRaw ? dietaryRaw.split(",").map(s => s.trim()) : [];
+
+      const height = document.getElementById("heightInput").value.trim();
+
+      const pcpName = document.getElementById("pcpName").value.trim();
+      const pcpEmail = document.getElementById("pcpEmail").value.trim();
+      const pcpPhone = document.getElementById("pcpPhone").value.trim();
+
+
+      let appointment_notes = [];
+      if (appointmentRaw) {
+        const pairs = appointmentRaw.split(",");
+        appointment_notes = pairs.map(str => {
+          const [dateStr, noteStr] = str.split(":").map(s => s.trim());
+          return { date: dateStr || "N/A", notes: noteStr || "" };
+        });
+      }
+
+      const vaccRaw = document.getElementById("vaccinationInput").value;
+      let vaccination_history = {};
+      if (vaccRaw) {
+        const pairs = vaccRaw.split(",");
+        pairs.forEach(item => {
+          const [vaccine, date] = item.split(":").map(s => s.trim());
+          if (vaccine && date) {
+            vaccination_history[vaccine] = date;
+          }
+        });
+      }
+
+      const insProvider = document.getElementById("insuranceProvider").value;
+      const policyNum = document.getElementById("policyNumber").value;
+      const groupNum = document.getElementById("groupNumber").value;
+
+      const dnrVal = document.getElementById("dnrInput").value;
+      const organDonorVal = document.getElementById("organDonorInput").value;
+      const livingWillVal = document.getElementById("livingWillInput").value;
+
+      // conditions
+      const conditions = [];
+      const condInputs = document.querySelectorAll('[name="conditions[]"]');
+      const medsInputs = document.querySelectorAll('[name="medications[]"]');
+      condInputs.forEach((cInput, idx) => {
+        const condName = cInput.value;
+        const medsRaw = medsInputs[idx].value;
+        const medsArr = medsRaw ? medsRaw.split(",").map(x => x.trim()) : [];
+        conditions.push({ condition: condName, medications: medsArr });
+      });
+
+      const schedule = [];
+      const scheduleMedInputs = document.querySelectorAll('[name="schedule_medication[]"]');
+      const scheduleConditionInputs = document.querySelectorAll('[name="schedule_condition[]"]');
+      const scheduleDosageInputs = document.querySelectorAll('[name="schedule_dosage[]"]');
+      const scheduleTimeInputs = document.querySelectorAll('[name="schedule_time[]"]');
+      const scheduleTakenInputs = document.querySelectorAll('[name="schedule_taken[]"]');
+      const scheduleCompartmentInputs = document.querySelectorAll('[name="schedule_compartment[]"]');
+
+
+      scheduleMedInputs.forEach((medInput, idx) => {
+        const medName = medInput.value.trim();
+        const medDosage = scheduleDosageInputs[idx].value.trim();
+        const medCondition = scheduleConditionInputs[idx].value.trim();
+        const medTime = scheduleTimeInputs[idx].value.trim();
+        const medCompartment = parseInt(scheduleCompartmentInputs[idx].value.trim(), 10) || null;
+
+        const medTaken = scheduleTakenInputs[idx].value === "true";
+        // Only add if all fields are filled (optional check)
+        if (medName || medDosage || medTime || medCondition) {
+          schedule.push({
+            medication: medName,
+            condition: medCondition,
+            dosage: medDosage,
+            time: medTime,
+            taken: medTaken,
+            compartment_id: medCompartment
+          });
+        }
+      });
+
+      const patientData = {
+        name: Name,
+        dob: DOB,
+        gender: gender,
+        marital_status: maritalStatus,
+        blood_type: bloodType,
+        emergency_contact: {
+          name: ecName,
+          phone: ecPhone,
+          email: ecEmail
+        },
+        allergies: allergies,
+        family_medical_history: {
+          Father: fatherArr,
+          Mother: motherArr
+        },
+        appointment_notes,
+        vaccination_history,
+        insurance: {
+          provider: insProvider,
+          policy_number: policyNum,
+          group_number: groupNum
+        },
+        advance_directives: {
+          DNR: dnrVal,
+          organ_donor: organDonorVal,
+          living_will_on_file: livingWillVal
+        },
+        medical_conditions: conditions.reduce((acc, { condition, medications }) => {
+          acc[condition] = { medications };
+          return acc;
+        }, {}),
+        medication_schedule: schedule
+      };
+
+      const newData = {
+        name: Name,
+        dob: DOB,
+        gender: gender,
+        marital_status: maritalStatus,
+        blood_type: bloodType,
+        emergency_contact: {
+          name: ecName,
+          phone: ecPhone,
+          email: ecEmail
+        },
+        allergies: allergies,
+        family_medical_history: {
+          Father: fatherArr,
+          Mother: motherArr
+        },
+        appointment_notes,
+        vaccination_history,
+        insurance: {
+          provider: insProvider,
+          policy_number: policyNum,
+          group_number: groupNum
+        },
+        advance_directives: {
+          DNR: dnrVal,
+          organ_donor: organDonorVal,
+          living_will_on_file: livingWillVal
+        },
+        medical_conditions: conditions.reduce((acc, { condition, medications }) => {
+          acc[condition] = { medications };
+          return acc;
+        }, {}),
+        dietary_restrictions,
+        height,
+        primary_care_physician: {
+          name: pcpName,
+          email: pcpEmail,
+          phone: pcpPhone
+        },
+        medication_schedule: schedule
+      }
+
+      try {
+        if (selectedPatientId) {
+          // Update existing doc
+          const docRef = doc(db, "Patient Information", selectedPatientId);
+          await updateDoc(docRef, patientData);
+          console.log("Updated patient:", selectedPatientId);
+        } else {
+          // Add new doc
+          // First check if there's an existing doc with same name/dob
+          const qRef = query(
+            collection(db, "Patient Information"),
+            where("name", "==", Name),
+            where("dob", "==", DOB)
+          );
+          const qsnap = await getDocs(qRef);
+          if (!qsnap.empty) {
+            // If found, just update the first doc
+            const docRef = qsnap.docs[0].ref;
+            await updateDoc(docRef, patientData);
+            console.log("Existing patient data updated successfully!");
+          } else {
+            await addDoc(collection(db, "Patient Information"), patientData);
+            console.log("Added new patient");
+          }
+        }
+
+        fetchPatientData();
+        addUpdateModal.classList.remove("visible");
+      } catch (error) {
+        console.error("Error adding/updating patient:", error);
+      }
+    });
+
+    // Grab references to the HTML elements
+    const medModeAddBtn = document.getElementById("med-mode-add");
+    const medModeUpdateBtn = document.getElementById("med-mode-update");
+    const medUpdateSection = document.getElementById("med-update-section");
+    const medicationSelect = document.getElementById("medication-select");
+    const addUpdateMedForm = document.getElementById("add-update-medication-form");
+
+    // Keep track of which doc we're updating (null => add mode)
+    let selectedMedicationId = null;
+
+    // 1. "Add New Medication" button logic
+    medModeAddBtn.addEventListener("click", () => {
+      console.log("Clicked Add New Medication");
+      selectedMedicationId = null;          // We are in "add" mode
+      medUpdateSection.style.display = "none";   // Hide the dropdown
+      addUpdateMedForm.style.display = "block";  // Show the form
+      clearMedicationForm();                     // (Optional) Clear old data
+    });
+
+    // 2. "Update Existing Medication" button logic
+    medModeUpdateBtn.addEventListener("click", async () => {
+      console.log("Clicked Update Existing Medication");
+      selectedMedicationId = null;          // We haven't chosen a doc yet
+      medUpdateSection.style.display = "block";  // Show the dropdown
+      addUpdateMedForm.style.display = "block";  // Show the form
+      clearMedicationForm();                     // (Optional) Clear old data
+      await populateMedicationSelect();          // Fill the <select> with existing meds
+    });
+
+    // 3. Populate the <select> with existing meds from Firestore
+    async function populateMedicationSelect() {
+      medicationSelect.innerHTML = `<option value="">-- Choose a Medication --</option>`;
+      const querySnapshot = await getDocs(collection(db, "Medication Information"));
+      querySnapshot.forEach(docSnap => {
+        const data = docSnap.data();
+        const option = document.createElement("option");
+        option.value = docSnap.id;                        // doc ID
+        option.textContent = data.medication || docSnap.id;
+        medicationSelect.appendChild(option);
+      });
+    }
+
+    // 4. If user picks a medication from the dropdown, load it
+    medicationSelect.addEventListener("change", async (e) => {
+      const docId = e.target.value;
+      if (!docId) {
+        console.log("No medication selected");
+        selectedMedicationId = null;
+        clearMedicationForm();
+        return;
+      }
+      selectedMedicationId = docId;
+      console.log("Selected medication docId:", docId);
+
+      // Example: fetch that doc from Firestore
+      const docRef = doc(db, "Medication Information", docId);
+      const docSnap = await getDoc(docRef);
+      if (docSnap.exists()) {
+        loadMedicationForm(docSnap.data());
+      } else {
+        console.warn("No doc found for ID:", docId);
+        selectedMedicationId = null;
+        clearMedicationForm();
+      }
+    });
+
+    function clearMedicationForm() {
+      // Basic fields
+      document.getElementById("medicationName").value = "";
+      document.getElementById("active_ingredient").value = "";
+      document.getElementById("brand_name").value = "";
+      document.getElementById("medical-conditions").value = "";
+      document.getElementById("common_side_effects").value = "";
+      document.getElementById("severe_side_effects").value = "";
+      document.getElementById("onset_of_action").value = "";
+      document.getElementById("drug_interactions").value = "";
+      document.getElementById("other_interactions").value = "";
+      document.getElementById("storage").value = "";
+      document.getElementById("compartment_id").value = "";
+      document.getElementById("inventory").value = "";
+      document.getElementById("expiration_date").value = "";
+      document.getElementById("lot_number").value = "";
+      document.getElementById("inactive_ingredients").value = "";
+      document.getElementById("manufacturer_name").value = "";
+      document.getElementById("manufacturer_phone").value = "";
+      document.getElementById("manufacturer_international_phone").value = "";
+      document.getElementById("warnings").value = "";
+
+      // Reset dosage container to one blank group
+      const dosageContainer = document.getElementById("dosage-container");
+      dosageContainer.innerHTML = `
+        <div class="dosage-group">
+          <label>Condition:</label>
+          <input type="text" name="dosage_conditions[]" required>
+          <label>Dosage:</label>
+          <input type="text" name="dosage_instructions[]" required>
+          <button type="button" class="add-dosage">Add Another Dosage</button>
+        </div>
+      `;
+
+      // Usage instructions (static approach)
+      document.getElementById("usage_activity").value = "";
+      document.getElementById("usage_food").value = "";
+      document.getElementById("usage_time").value = "";
+      document.getElementById("usage_water").value = "";
+    }
+
+    function loadMedicationForm(data) {
+      console.log("loadMedicationForm sees:", data);
+      document.getElementById("medicationName").value = data.medication || "";
+      document.getElementById("active_ingredient").value = data.active_ingredient || "";
+      document.getElementById("brand_name").value = data.brand_name || "";
+      document.getElementById("medical-conditions").value = data.medical_conditions || "";
+      document.getElementById("common_side_effects").value = data.common_side_effects || "";
+      document.getElementById("severe_side_effects").value = data.severe_side_effects || "";
+      document.getElementById("onset_of_action").value = data.onset_of_action || "";
+      document.getElementById("drug_interactions").value = data.drug_interactions || "";
+      document.getElementById("other_interactions").value = data.other_interactions || "";
+      document.getElementById("storage").value = data.storage || "";
+      document.getElementById("compartment_id").value = data.compartment_id != null ? data.compartment_id : "";
+      document.getElementById("inventory").value = data.inventory != null ? data.inventory : "";
+      document.getElementById("expiration_date").value = data.expiration_date || "";
+      document.getElementById("lot_number").value = data.lot_number || "";
+
+      // If inactive_ingredients is an array, join with commas
+      document.getElementById("inactive_ingredients").value = Array.isArray(data.inactive_ingredients)
+        ? data.inactive_ingredients.join(", ")
+        : "";
+
+      // manufacturer_information => name, phone, international_phone
+      if (data.manufacturer_information && data.manufacturer_information.contact) {
+        document.getElementById("manufacturer_name").value = data.manufacturer_information.name || "";
+        document.getElementById("manufacturer_phone").value = data.manufacturer_information.contact.phone || "";
+        document.getElementById("manufacturer_international_phone").value = data.manufacturer_information.contact.international_phone || "";
+      } else {
+        document.getElementById("manufacturer_name").value = "";
+        document.getElementById("manufacturer_phone").value = "";
+        document.getElementById("manufacturer_international_phone").value = "";
+      }
+
+      // Warnings => array
+      if (Array.isArray(data.warnings)) {
+        document.getElementById("warnings").value = data.warnings.join(", ");
+      } else {
+        document.getElementById("warnings").value = "";
+      }
+
+      // DOSAGE => object { conditionName: dosageString }
+      const dosageContainer = document.getElementById("dosage-container");
+      dosageContainer.innerHTML = "";
+      const dosageData = data.dosage || {};
+      const dosageKeys = Object.keys(dosageData);
+      if (dosageKeys.length === 0) {
+        // If no dosage, just create an empty group
+        dosageContainer.innerHTML = `
+          <div class="dosage-group">
+            <label>Condition:</label>
+            <input type="text" name="dosage_conditions[]" required>
+            <label>Dosage:</label>
+            <input type="text" name="dosage_instructions[]" required>
+            <button type="button" class="add-dosage">Add Another Dosage</button>
+          </div>
+        `;
+      } else {
+        dosageKeys.forEach((condName) => {
+          const instr = dosageData[condName];
+          const group = document.createElement("div");
+          group.classList.add("dosage-group");
+          group.innerHTML = `
+            <label>Condition:</label>
+            <input type="text" name="dosage_conditions[]" value="${condName}" required>
+            <label>Dosage:</label>
+            <input type="text" name="dosage_instructions[]" value="${instr}" required>
+            <button type="button" class="remove-dosage">Remove Dosage</button>
+          `;
+          dosageContainer.appendChild(group);
+        });
+        // Add the "Add Another Dosage" button
+        const addBtn = document.createElement("button");
+        addBtn.type = "button";
+        addBtn.classList.add("add-dosage");
+        addBtn.textContent = "Add Another Dosage";
+        dosageContainer.appendChild(addBtn);
+      }
+
+      // Usage instructions => object { activity, food, time, water }
+      const usageObj = data.usage_instructions || {};
+      document.getElementById("usage_activity").value = usageObj.activity || "";
+      document.getElementById("usage_food").value = usageObj.food || "";
+      document.getElementById("usage_time").value = usageObj.time || "";
+      document.getElementById("usage_water").value = usageObj.water || "";
+    }
+
+    document.getElementById("add-update-medication-form").addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const addUpdateMedModal = document.getElementById("add-update-medication-modal");
+      // 1) Basic fields
+      const medication = document.getElementById("medicationName").value.trim();
+      const active_ingredient = document.getElementById("active_ingredient").value.trim();
+      const brand_name_raw = document.getElementById("brand_name").value.trim();
+      const brand_name = brand_name_raw ? brand_name_raw.split(",").map(s => s.trim()) : [];
+      const medical_conditions = document.getElementById("medical-conditions").value.trim();
+      const common_side_effects = document.getElementById("common_side_effects").value.trim();
+      const severe_side_effects = document.getElementById("severe_side_effects").value.trim();
+      const onset_of_action = document.getElementById("onset_of_action").value.trim();
+      const drug_interactions = document.getElementById("drug_interactions").value.trim();
+      const other_interactions = document.getElementById("other_interactions").value.trim();
+      const storage = document.getElementById("storage").value.trim();
+      const compartment_id = parseInt(document.getElementById("compartment_id").value, 10);
+      const inventory = parseInt(document.getElementById("inventory").value, 10);
+      const expiration_date = document.getElementById("expiration_date").value.trim();
+      const lot_number = document.getElementById("lot_number").value.trim();
+
+      // If inactive_ingredients is an array, parse from comma-separated
+      const inactRaw = document.getElementById("inactive_ingredients").value.trim();
+      const inactive_ingredients = inactRaw ? inactRaw.split(",").map(s => s.trim()) : [];
+
+      // Manufacturer
+      const manufacturer_name = document.getElementById("manufacturer_name").value.trim();
+      const manufacturer_phone = document.getElementById("manufacturer_phone").value.trim();
+      const manufacturer_international_phone = document.getElementById("manufacturer_international_phone").value.trim();
+
+      // Warnings array
+      const warnRaw = document.getElementById("warnings").value.trim();
+      const warnings = warnRaw ? warnRaw.split(",").map(s => s.trim()) : [];
+
+      // 2) Dosage object
+      const dosage = {};
+      const dosageCondInputs = document.querySelectorAll("[name='dosage_conditions[]']");
+      const dosageInstrInputs = document.querySelectorAll("[name='dosage_instructions[]']");
+      dosageCondInputs.forEach((condInput, index) => {
+        const condName = condInput.value.trim();
+        const instr = dosageInstrInputs[index].value.trim();
+        if (condName) {
+          dosage[condName] = instr;
+        }
+      });
+
+      // 3) Usage instructions object
+      const usage_instructions = {
+        activity: document.getElementById("usage_activity").value.trim(),
+        food: document.getElementById("usage_food").value.trim(),
+        time: document.getElementById("usage_time").value.trim(),
+        water: document.getElementById("usage_water").value.trim()
+      };
+
+      // 4) Build the final medicationData
+      const medicationData = {
+        medication,
+        active_ingredient,
+        brand_name,              // array
+        medical_conditions,
+        common_side_effects,
+        severe_side_effects,
+        onset_of_action,
+        drug_interactions,
+        other_interactions,
+        storage,
+        compartment_id,
+        inventory,
+        expiration_date,
+        lot_number,
+        inactive_ingredients,    // array
+        manufacturer_information: {
+          name: manufacturer_name,
+          contact: {
+            phone: manufacturer_phone,
+            international_phone: manufacturer_international_phone
+          }
+        },
+        warnings,                // array
+        dosage,                  // object
+        usage_instructions       // object
+      };
+
+      try {
+        if (selectedMedicationId) {
+          // Update existing doc
+          const docRef = doc(db, "Medication Information", selectedMedicationId);
+          await updateDoc(docRef, medicationData);
+          console.log("Updated existing medication:", selectedMedicationId);
+        } else {
+          // Add new doc
+          // If you want doc ID to be medication name:
+          const medDocRef = doc(db, "Medication Information", medication);
+          await setDoc(medDocRef, medicationData);
+          console.log("Added new medication:", medication);
+        }
+
+        alert("Medication data saved/updated successfully!");
+        addUpdateMedModal.classList.remove("visible");
+      } catch (error) {
+        console.error("Error adding/updating medication:", error);
+        alert("Failed to save medication data: " + error.message);
+      }
+    });
+
+
+    // ===================== MEDICATION MODAL LOGIC (unchanged) =====================
+
+    function displayMedicationInfo(medData) {
+      const infoHTML = `
+        <h3>${medData.medication || "N/A"}</h3>
+        <p><strong>Active Ingredient:</strong> ${medData.active_ingredient || "N/A"}</p>
+        <p><strong>Brand Names:</strong> ${medData.brand_name || "N/A"}</p>
+        <p><strong>Medical Conditions:</strong> ${medData.medical_conditions || "N/A"}</p>
+        <p><strong>Common Side Effects:</strong> ${medData.common_side_effects || "N/A"}</p>
+        <p><strong>Severe Side Effects:</strong> ${medData.severe_side_effects || "N/A"}</p>
+        <p><strong>Onset of Action:</strong> ${medData.onset_of_action || "N/A"}</p>
+        <p><strong>Dosage:</strong></p>
+        <ul>
+          ${medData.dosage ? Object.entries(medData.dosage)
+            .map(([condition, dosage]) =>
+              `<li><strong>${condition.replace(/_/g, " ")}:</strong> ${dosage}</li>`
+            ).join("") : "<li>N/A</li>"}
+        </ul>
+        <p><strong>Drug Interactions:</strong> ${medData.drug_interactions || "N/A"}</p>
+        <p><strong>Other Interactions:</strong> ${medData.other_interactions || "N/A"}</p>
+        <p><strong>Usage Instructions:</strong></p>
+        <ul>
+          ${medData.usage_instructions ? `
+          <li><strong>Activity:</strong> ${medData.usage_instructions.activity || "N/A"}</li>
+          <li><strong>Food:</strong> ${medData.usage_instructions.food || "N/A"}</li>
+          <li><strong>Time:</strong> ${medData.usage_instructions.time || "N/A"}</li>
+          <li><strong>Water:</strong> ${medData.usage_instructions.water || "N/A"}</li>
+          ` : "<li>N/A</li>"}
+        </ul>
+        <p><strong>Storage:</strong> ${medData.storage || "N/A"}</p>
+        <p><strong>Compartment ID:</strong> ${medData.compartment_id != null ? medData.compartment_id : "N/A"}</p>
+        <p><strong>Inventory:</strong> ${medData.inventory != null ? medData.inventory : "N/A"}</p>
+        <p><strong>Expiration Date:</strong> ${medData.expiration_date || "N/A"}</p>
+        <p><strong>Lot Number:</strong> ${medData.lot_number || "N/A"}</p>
+        <p><strong>Inactive Ingredients:</strong> ${medData.inactive_ingredients ? medData.inactive_ingredients.join(", ") : "N/A"}</p>
+        <p><strong>Manufacturer Information:</strong></p>
+        <ul>
+          ${medData.manufacturer_information && medData.manufacturer_information.contact ? `
+          <li><strong>Name:</strong> ${medData.manufacturer_information.name || "N/A"}</li>
+          <li><strong>Phone:</strong> ${medData.manufacturer_information.contact.phone || "N/A"}</li>
+          <li><strong>International Phone:</strong> ${medData.manufacturer_information.contact.international_phone || "N/A"}</li>
+          ` : "<li>N/A</li>"}
+        </ul>
+        <p><strong>Warnings:</strong> ${medData.warnings ? medData.warnings.join("<br>") : "N/A"}</p>
+      `;
+
+      // Create a container for the modal
+      const modal = document.createElement("div");
+      modal.id = "medication-modal";
+      modal.innerHTML = `
+        <div class="modal-content">
+          <span class="close-button">&times;</span>
+          ${infoHTML}
+        </div>
+      `;
+
+      // Add the modal to the page
+      document.body.appendChild(modal);
+
+      // Close button logic
+      const closeButton = modal.querySelector(".close-button");
+      closeButton.addEventListener("click", () => {
+        document.body.removeChild(modal);
+      });
+    }
+
+    document.addEventListener("click", async (event) => {
+      if (event.target && event.target.classList.contains("medication-link")) {
+        event.preventDefault();
+        const medicationName = event.target.dataset.medication;
+        console.log("Medication link clicked:", medicationName);
+
+        try {
+          const medDocRef = doc(db, "Medication Information", medicationName);
+          const docSnap = await getDoc(medDocRef);
+
+          if (docSnap.exists()) {
+            const medData = docSnap.data();
+            displayMedicationInfo(medData);
+          } else {
+            alert("Medication information not found!");
+          }
+        } catch (error) {
+          console.error("Error fetching medication info:", error);
+        }
+      }
+    });
+
+
+    document.getElementById("add-update-medication-button").addEventListener("click", () => {
+      document.getElementById("add-update-medication-modal").classList.add("visible");
+    });
+
+    document.getElementById("close-add-update-medication-modal").addEventListener("click", () => {
+      document.getElementById("add-update-medication-modal").classList.remove("visible");
+    });
+
+    // ===================== CONDITIONS, DOSAGE, USAGE DYNAMIC FIELDS =====================
+    document.getElementById("conditions-container").addEventListener("click", function(event) {
+      if (event.target && event.target.classList.contains("add-condition")) {
+        const conditionGroup = document.createElement("div");
+        conditionGroup.classList.add("condition-group");
+        conditionGroup.innerHTML = `
+          <label>Condition:</label>
+          <input type="text" name="conditions[]" required>
+          <label>Medication(s):</label>
+          <input type="text" name="medications[]" required>
+          <button type="button" class="remove-condition">Remove Condition</button>
+        `;
+        document.getElementById("conditions-container").appendChild(conditionGroup);
+      }
+      if (event.target && event.target.classList.contains("remove-condition")) {
+        event.target.closest(".condition-group").remove();
+      }
+    });
+
+    document.getElementById("dosage-container").addEventListener("click", function(event) {
+      if (event.target && event.target.classList.contains("add-dosage")) {
+        const dosageGroup = document.createElement("div");
+        dosageGroup.classList.add("dosage-group");
+        dosageGroup.innerHTML = `
+          <label for="dosage-condition">Condition:</label>
+          <input type="text" name="dosage_conditions[]" required>
+          <label for="dosage-instruction">Dosage:</label>
+          <input type="text" name="dosage_instructions[]" required>
+          <button type="button" class="remove-dosage">Remove Dosage</button>
+        `;
+        document.getElementById("dosage-container").appendChild(dosageGroup);
+      }
+      if (event.target && event.target.classList.contains("remove-dosage")) {
+        event.target.closest(".dosage-group").remove();
+      }
+    });
+
+    document.getElementById("usage-container").addEventListener("click", function(event) {
+      if (event.target && event.target.classList.contains("add-usage")) {
+        const usageGroup = document.createElement("div");
+        usageGroup.classList.add("usage-group");
+        usageGroup.innerHTML = `
+          <label for="usage-key">Instruction Type:</label>
+          <input type="text" name="usage_keys[]" required>
+          <label for="usage-value">Instruction:</label>
+          <input type="text" name="usage_values[]" required>
+          <button type="button" class="remove-usage">Remove Usage Instruction</button>
+        `;
+        document.getElementById("usage-container").appendChild(usageGroup);
+      }
+      if (event.target && event.target.classList.contains("remove-usage")) {
+        event.target.closest(".usage-group").remove();
+      }
+    });
+
+    // --------------------- QA Tab Functions ---------------------
+
+    // Global array to store QA entries
+    window.qaEntries = [];
+
+    /**
+     * Fetch all documents from the "QA" collection, convert timestamps,
+     * then populate the filter dropdown and display the entries.
+     */
+     async function fetchQAEntriesForPatient(patientName) {
+      try {
+        // Build a query that only matches docs with QA.name == patientName
+        const qaQuery = query(
+          collection(db, "QA"),
+          where("name", "==", patientName)
+        );
+        const querySnapshot = await getDocs(qaQuery);
+
+        const entries = [];
+        querySnapshot.forEach((doc) => {
+          const data = doc.data();
+          // If your code expects a timestamp, be sure to convert it:
+          if (data.timestamp) {
+            data.id = doc.id;
+            data.timestamp = data.timestamp.toDate();
+            entries.push(data);
+          }
+        });
+        // Sort by ascending timestamp
+        entries.sort((a, b) => a.timestamp - b.timestamp);
+
+        // Store them globally for your date-filter logic:
+        window.qaEntries = entries;
+
+        // Rebuild the date dropdown and display the new list
+        populateQAFilter(entries);
+        displayQAEntries(entries);
+
+      } catch (error) {
+        console.error("Error fetching QA entries for patient:", error);
+      }
+    }
+
+    /**
+     * Build the date dropdown from all QA timestamps.
+     */
+    function populateQAFilter(entries) {
+      const filterSelect = document.getElementById("qa-filter");
+      // Create a set of unique date strings
+      const datesSet = new Set();
+      entries.forEach(entry => {
+        const dateStr = entry.timestamp.toLocaleDateString();
+        datesSet.add(dateStr);
+      });
+      // Clear existing options except "All Dates"
+      filterSelect.innerHTML = `<option value="all">All Dates</option>`;
+      // Add one <option> per unique date
+      Array.from(datesSet).sort().forEach(date => {
+        const option = document.createElement("option");
+        option.value = date;
+        option.textContent = date;
+        filterSelect.appendChild(option);
+      });
+    }
+
+    /**
+     * Display the QA entries that match the currently selected date (or all).
+     */
+    function displayQAEntries(entries) {
+      const filterSelect = document.getElementById("qa-filter");
+      const selectedDate = filterSelect.value;
+      const qaListDiv = document.getElementById("qa-list");
+      qaListDiv.innerHTML = "";
+
+      // If user picks "all", show everything; otherwise filter by that date
+      const filtered = (selectedDate === "all")
+        ? entries
+        : entries.filter(entry => entry.timestamp.toLocaleDateString() === selectedDate);
+
+      if (filtered.length === 0) {
+        qaListDiv.textContent = "No QA entries for the selected date.";
+        return;
+      }
+
+      // For each entry, create a clickable link
+      filtered.forEach(entry => {
+        const timeStr = entry.timestamp.toLocaleTimeString();
+        const link = document.createElement("a");
+        link.href = "#";
+        link.textContent = `${entry.timestamp.toLocaleDateString()} ${timeStr}`;
+        link.classList.add("qa-entry-link");
+        link.dataset.entryId = entry.id;
+
+        // When clicked, open a small modal with question/answer
+        link.addEventListener("click", (e) => {
+          e.preventDefault();
+          displayQAEntryDetail(entry);
+        });
+
+        const div = document.createElement("div");
+        div.appendChild(link);
+        qaListDiv.appendChild(div);
+      });
+    }
+
+    /**
+     * Show a small modal with question/answer for a single QA entry.
+     */
+    function displayQAEntryDetail(entry) {
+      const detailHTML = `
+        <h3>QA Entry - ${entry.timestamp.toLocaleDateString()} ${entry.timestamp.toLocaleTimeString()}</h3>
+        <p><strong>Question:</strong> ${entry.question || "N/A"}</p>
+        <p><strong>Answer:</strong> ${entry.answer || "N/A"}</p>
+        <p><strong>Patient Name:</strong> ${entry.name || "N/A"}</p>
+      `;
+
+      // Create a full-screen overlay for the modal
+      const modal = document.createElement("div");
+      modal.id = "qa-modal";
+      modal.innerHTML = `
+        <div class="modal-content">
+          <span class="close-button">&times;</span>
+          ${detailHTML}
+        </div>
+      `;
+      document.body.appendChild(modal);
+
+      // Close the modal on "×" click
+      const closeButton = modal.querySelector(".close-button");
+      closeButton.addEventListener("click", () => {
+        document.body.removeChild(modal);
+      });
+    }
+
+    /**
+     * If user changes the date filter, re-display QA entries.
+     */
+    document.getElementById("qa-filter").addEventListener("change", () => {
+      displayQAEntries(window.qaEntries);
+    });
+
+    // ===================== CONSOLE LOGS & LISTENERS =====================
+    const updateConsole = document.getElementById("update-console");
+    function logUpdate(message) {
+      const newUpdate = document.createElement("div");
+      newUpdate.textContent = message;
+      updateConsole.appendChild(newUpdate);
+      updateConsole.scrollTop = updateConsole.scrollHeight;
+    }
+
+    function listenForUpdates(collectionName) {
+      const dataCollection = collection(db, collectionName);
+      let initialized = false;
+      onSnapshot(dataCollection, (snapshot) => {
+        snapshot.docChanges().forEach((change) => {
+          const docData = change.doc.data();
+          const docId = change.doc.id;
+          let displayName = collectionName === "Patient Information" ? docData.name || "Unknown Patient" : docId;
+          if (!initialized && change.type === "added") return;
+          if (change.type === "modified") {
+            logUpdate(`${collectionName} record updated: ${displayName}`);
+          } else if (change.type === "added") {
+            logUpdate(`New ${collectionName} added: ${displayName}`);
+          } else if (change.type === "removed") {
+            logUpdate(`${collectionName} record deleted: ${displayName}`);
+          }
+        });
+        initialized = true;
+      }, (error) => {
+        console.error(`Error listening to ${collectionName}:`, error);
+      });
+    }
+
+    listenForUpdates("Patient Information");
+    listenForUpdates("Medication Information");
+    listenForUpdates("QA");
+
+    // Also fetch patient data on load
+    fetchPatientData();
+  </script>
+
+  <div id="update-console" style="border: 1px solid black; padding: 10px; max-height: 300px; overflow-y: auto;">
+    <strong>Update Console:</strong>
+  </div>
+</body>
+</html>
