@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>MediAlly - Dashboard</title>
+  <!-- Use your existing style.css for styling -->
+  <link rel="stylesheet" href="style.css">
+  <!-- Include app.js to handle sign-out and auth state checks -->
+  <script type="module" src="app.js"></script>
+</head>
+<body>
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="logo">
+        <!-- If you have a logo image named "logo.png" -->
+        <a href="dashboard.html">
+          <img src="logo.png" alt="MediAlly Logo">
+        </a>
+      </div>
+    <ul class="nav-links">
+      <!-- Introduction link (stays on this page) -->
+      <li><a href="dashboard.html" class="active">Introduction</a></li>
+
+      <!-- Database link (goes to your existing test.html) -->
+      <li><a href="test.html">Database</a></li>
+
+      <!-- Contact link (will go to contact.html) -->
+      <li><a href="contact.html">Contact</a></li>
+
+      <!-- Logout button -->
+      <li><button id="logout-button">Logout</button></li>
+    </ul>
+  </nav>
+
+  <!-- Main content for Introduction -->
+  <section id="introduction-section">
+    <h2>Welcome to MediAlly</h2>
+    <p>Welcome, Nurse! Here at <strong>MediAlly</strong>, we understand the demands you face daily—balancing patient safety, tight schedules, and detailed medication management. Our goal is to streamline your workflow and help reduce medication errors, especially in busy long-term care (LTC) environments where staff shortages and high patient loads can be overwhelming.</p>
+
+        <p>On this dashboard, you’ll find:</p>
+        
+        <p><strong>Database:</strong> The main interface for accessing and updating patient information, medication schedules, and other vital data. This is where you can quickly view, add, or modify records to keep your patients’ care plans current.</p>
+        <p><strong>Contact:</strong> A resource for departmental numbers, customer support lines, and additional ways to reach out if you need assistance or have feedback about MediAlly.</p>
+        <p>Whether you’re verifying patient records or looking up dosages, our system is here to save you time, enhance accuracy, and ensure each patient receives the right care at the right moment. Thank you for your dedication, and we hope this platform makes your day-to-day tasks more manageable.</p>
+  </section>
+</body>
+</html>
