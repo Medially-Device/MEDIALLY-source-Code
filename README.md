@@ -56,7 +56,7 @@ A modular AI-powered system designed to reduce medication errors and support hea
 
 ### `/LLM`
 - `bluetooth_recorder`: ROS2 package containing the main python functions and modules of the LLM
-- `medially_interfaces`: COntaines the srv's used by the main python modules
+- `medially_interfaces`: Containes the srv's used by the main python modules
 
 
 ### `/Firebase`
