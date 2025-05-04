@@ -128,10 +128,10 @@ To set up the **LLM Module** on a **Raspberry Pi** (or any Linux machine) with *
 
 Clone this repository into your ROS 2 workspace:
 
-
+```
 cd ~/ros2_ws/src
-git clone https://github.com/YourUser/SmartPillbox-LLM-Module.git
-
+git clone https://github.com/Medially-Device/MEDIALLY-source-Code.git
+```
 
 - It is recommended to use a Python virtual environment. From the root of your workspace or inside the bluetooth_recorder folder, run:
 
@@ -155,12 +155,12 @@ Once the dependencies are installed and the packages are added to your ROS 2 wor
 
 From the root of your workspace:
 
-
+```
 cd ~/ros2_ws
 rosdep install --from-paths src --ignore-src -r -y
 colcon build --packages-select medially_interfaces bluetooth_recorder
 source install/setup.bash
-
+```
 ### 🚦 Step 2: Launch the LLM Module
 Use the provided ROS 2 launch file to start all required nodes:
 

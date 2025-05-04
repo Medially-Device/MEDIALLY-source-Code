@@ -55,10 +55,9 @@ A modular AI-powered system designed to reduce medication errors and support hea
 - `images/`: Landmark visuals, architecture diagrams, confusion matrices.
 
 ### `/LLM`
-- `llm_pipeline.py`: Speech-to-text, intent classification, question answering.
-- `intent_classifier/`: BioBERT fine-tuned model.
-- `prompt_engineering/`: Prompt templates and query logic.
-- `audio/`: gTTS integration and emergency alert triggers.
+- `bluetooth_recorder`: ROS2 package containing the main python functions and modules of the LLM
+- `medially_interfaces`: COntaines the srv's used by the main python modules
+
 
 ### `/Firebase`
 - `index.html`: User Sign-In page using Google Services
